@@ -7,11 +7,12 @@ def high(sig):
 
 
 class AxiLiteMonitor:
-    """Watches the bus, records every write and read, and tells the scoreboard."""
+    """Watches the bus, records every write and read, and tells the scoreboard and coverage."""
 
-    def __init__(self, dut, scoreboard=None):
+    def __init__(self, dut, scoreboard=None, coverage=None):
         self.dut = dut
         self.scoreboard = scoreboard
+        self.coverage = coverage
         self.writes = []   # each item: (addr, data, strb)
         self.reads = []    # each item: (addr, data)
         self._read_addrs = []
@@ -30,6 +31,8 @@ class AxiLiteMonitor:
                 d._log.info(f"MON write addr=0x{item[0]:X} data=0x{item[1]:08X} strb=0x{item[2]:X}")
                 if self.scoreboard:
                     self.scoreboard.on_write(*item)
+                if self.coverage:
+                    self.coverage.sample_write(item[0], item[2])
 
     async def _watch_reads(self):
         d = self.dut
@@ -44,3 +47,5 @@ class AxiLiteMonitor:
                 d._log.info(f"MON read  addr=0x{addr:X} data=0x{data:08X}")
                 if self.scoreboard:
                     self.scoreboard.on_read(addr, data)
+                if self.coverage:
+                    self.coverage.sample_read(addr)

@@ -4,6 +4,7 @@ from cocotb.clock import Clock
 from axi_lite_driver import AxiLiteDriver
 from axi_lite_monitor import AxiLiteMonitor
 from axi_lite_scoreboard import AxiLiteScoreboard
+from axi_lite_coverage import AxiLiteCoverage
 
 
 @cocotb.test()
@@ -12,7 +13,8 @@ async def test_write_then_read_all_regs(dut):
 
     drv = AxiLiteDriver(dut)
     scb = AxiLiteScoreboard(dut)
-    mon = AxiLiteMonitor(dut, scb)
+    cov = AxiLiteCoverage(dut)
+    mon = AxiLiteMonitor(dut, scb, cov)
 
     await drv.reset()
     mon.start()
@@ -38,3 +40,4 @@ async def test_write_then_read_all_regs(dut):
     assert len(mon.reads) == 4, f"Monitor saw {len(mon.reads)} reads, expected 4"
 
     scb.report()
+    cov.report()
