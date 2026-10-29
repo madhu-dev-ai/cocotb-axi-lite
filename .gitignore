@@ -1,0 +1,8 @@
+sim_build/
+__pycache__/
+results.xml
+*.vcd
+*.fst
+bug1_output.txt
+bug1_full.txt
+bug2_full.txt
