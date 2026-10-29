@@ -1,96 +1,72 @@
-\# cocotb-axi-lite
+\# Hi, I'm Madhu Kumari
 
 
 
-!\[CI](https://github.com/madhu-dev-ai/cocotb-axi-lite/actions/workflows/ci.yml/badge.svg)
+VLSI design verification enthusiast | B.Tech EEE | AI and Robotics Trainer
 
 
 
-Verification of an AXI4-Lite register slave (4 registers, 32-bit data, byte strobes) using cocotb and Python, with a layered testbench.
+I verify digital hardware designs using \*\*cocotb (Python)\*\* and \*\*Icarus Verilog\*\*. Every project below has a self-checking testbench, bugs I planted and caught, and a green GitHub Actions check.
 
 
 
-\## What is verified
+Based in Jamshedpur, India. Open to \*\*design verification roles\*\*.
 
 
 
-The design has 5 channels (AW, W, B, AR, R) with valid/ready handshakes. Writes support byte strobes, so a write can change only some bytes of a register.
+\## Verification Projects
 
 
 
-\## Testbench structure
+| # | Project | What it verifies |
 
+|---|---------|------------------|
 
+| 1 | \[cocotb-counter](https://github.com/madhu-dev-ai/cocotb-counter) | Counter with a cocotb testbench |
 
-| Component | File | Job |
+| 2 | \[cocotb-alu](https://github.com/madhu-dev-ai/cocotb-alu) | ALU checked against a Python model |
 
-|---|---|---|
+| 3 | \[cocotb-fifo](https://github.com/madhu-dev-ai/cocotb-fifo) | Synchronous FIFO with a scoreboard |
 
-| Driver | `axi\_lite\_driver.py` | Does the write and read handshakes |
+| 4 | \[cocotb-uart](https://github.com/madhu-dev-ai/cocotb-uart) | UART transmitter and receiver |
 
-| Monitor | `axi\_lite\_monitor.py` | Watches the bus and records every transaction |
+| 5 | \[cocotb-sv-practice](https://github.com/madhu-dev-ai/cocotb-sv-practice) | SystemVerilog design practice with cocotb tests |
 
-| Scoreboard | `axi\_lite\_scoreboard.py` | Keeps a reference copy of the registers and checks every read |
+| 6 | \[cocotb-apb-regs](https://github.com/madhu-dev-ai/cocotb-apb-regs) | APB register block |
 
-| Coverage | `axi\_lite\_coverage.py` | Counts 10 bins (each register written and read, full and partial strobes) |
+| 7 | \[cocotb-axis-fifo](https://github.com/madhu-dev-ai/cocotb-axis-fifo) | AXI-Stream FIFO |
 
-| Tests | `test\_axi\_lite.py` | `test\_basic` and `test\_random` (both have a 200 us timeout) |
+| 8 | \[cocotb-apb-uvm](https://github.com/madhu-dev-ai/cocotb-apb-uvm) | UVM-style layered testbench (driver, monitor, scoreboard, coverage) with 500 random operations and 10/10 coverage bins |
 
+| 9 | \[cocotb-async-fifo](https://github.com/madhu-dev-ai/cocotb-async-fifo) | Asynchronous FIFO with Gray-code pointers, UVM-style testbench, 10/10 coverage bins, 2 planted bugs caught |
 
+| 10 | \[cocotb-axi-lite](https://github.com/madhu-dev-ai/cocotb-axi-lite) | AXI4-Lite register slave with byte strobes, layered testbench, 200 random operations, 10/10 coverage bins, 2 planted bugs caught |
 
-`test\_random` runs 200 random writes and reads with random byte strobes and reaches 10/10 coverage bins.
 
 
+\## Skills
 
-\## Bug stories
 
 
+\- \*\*Verification:\*\* cocotb, Python, constrained-random testing, scoreboards, functional coverage
 
-\### Bug 1: byte strobe ignored
+\- \*\*HDL and tools:\*\* Verilog, SystemVerilog, Icarus Verilog, Make, Git, GitHub Actions
 
+\- \*\*Protocols:\*\* APB, AXI4-Lite, AXI-Stream, UART
 
 
-I changed the design so byte 1 was always written, even when its strobe bit was 0.
 
+\## Coming Next
 
 
-\- `test\_basic` \*\*passed\*\*. It only writes with full strobe (`0xF`), so it never exposed the bug.
 
-\- `test\_random` \*\*failed\*\*. The scoreboard reported `SCB MISMATCH addr=0x0: expected 0x7ED4B1F5, got 0x7ED4D5F5`. Only byte 1 was wrong (`B1` became `D5`).
+\- Constrained-random sequences
 
 
 
-Lesson: a test that only does full writes can miss a strobe bug. Random strobes plus a reference model catch it.
+\## Contact
 
 
 
-\### Bug 2: write response never sent
-
-
-
-I changed the design so `bvalid` was never raised after a write.
-
-
-
-\- Both `test\_basic` and `test\_random` \*\*failed\*\* by hitting the 200 us timeout, because the driver waited forever for the response.
-
-
-
-Lesson: a timeout turns a hang into a clear failure instead of a stuck simulation.
-
-
-
-\## Run it
-
-
-
-```
-
-make
-
-```
-
-
-
-Requires cocotb 2.1.0 and Icarus Verilog.
+Email: madhukumari2332@gmail.com
 
